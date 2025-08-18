@@ -27,3 +27,15 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### txt files ###
+*.txt
+
+### png files ###
+*.png
+
+### mp4 files ###
+*.mp4
+
+### xml files ###
+*.xml
