@@ -7,10 +7,10 @@ public class Main {
 
     public static void main(String[] args) {
         int L = 100; // Size of the square domain
-        int N = 100; // Number of particles
-        double v = 0.03; // Speed of particles
-        double r = 1.0; // Interaction radius
-        double eta = 0.1; // Noise factor
+        int N = 50; // Number of particles
+        double v = 5; // Speed of particles
+        double r = 10.0; // Interaction radius
+        double eta = 1.5; // Noise factor
         double deltaT = 0.1; // Time step
 
         Vicsek vicsekModel = new Vicsek(L, N, v, r, eta, deltaT);
@@ -18,10 +18,11 @@ public class Main {
         File outputFile = new File(txtFile);
 
         try (java.io.PrintWriter writer = new java.io.PrintWriter(outputFile)) {
+            writer.printf("id x y theta%n");
             for (int step = 0; step < totalSteps; step++) {
                 vicsekModel.updateParticles();
                 for (Particle p : vicsekModel.particles) {
-                    writer.printf("%d %d %d %d%n", p.id, p.x, p.y, p.theta);
+                    writer.printf("%d %.6f %.6f %.6f%n", p.id, p.x, p.y, p.theta);
                 }
                 writer.println();
             }

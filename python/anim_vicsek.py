@@ -33,17 +33,27 @@ def read_frames_plain(path):
             line = line.strip()
             if not line:
                 continue
+
+            # 1) Intento por whitespace
             parts = line.split()
+            # 2) Si no son 4, intento CSV
             if len(parts) != 4:
-                # permitir CSV con comas, por si acaso
-                parts = [p for p in line.replace(",", " ").split() if p]
-                if len(parts) != 4:
-                    continue
+                parts = [p.strip() for p in line.split(",")]
+            if len(parts) != 4:
+                continue  # línea no válida
+
             i_str, x_str, y_str, th_str = parts
+
+            # Normalización decimal: coma -> punto
+            i_str  = i_str.replace(",", ".")
+            x_str  = x_str.replace(",", ".")
+            y_str  = y_str.replace(",", ".")
+            th_str = th_str.replace(",", ".")
+
             try:
-                i = int(i_str)
-                x = float(x_str)
-                y = float(y_str)
+                i  = int(float(i_str))  # por si viene "1.0"
+                x  = float(x_str)
+                y  = float(y_str)
                 th = float(th_str)
             except ValueError:
                 continue
@@ -115,12 +125,14 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
                      scale=vector_scale, width=0.008, alpha=0.9)  # width aumentado
         cb = fig.colorbar(Q, ax=ax, fraction=0.046, pad=0.04)
         cb.set_label("Ángulo (0=π, 0.5=0, 1=π)", fontsize=10)
+        # Puntos coloreados por ángulo, sin radio (pixel)
+        scatter = ax.scatter(x, y, c=c, cmap="hsv", s=1, marker=",", linewidths=0, alpha=1.0, zorder=5)
+        scatter.set_clim(0.0, 1.0)
     else:
         Q = ax.quiver(x, y, u, v, angles="xy", scale_units="xy", 
                      scale=vector_scale, width=0.008, color="blue", alpha=0.9)  # width aumentado
-
-    # ARREGLADO: Agregar puntos para mostrar las posiciones de las partículas
-    scatter = ax.scatter(x, y, c='red', s=50, alpha=0.7, zorder=5)  # Puntos rojos grandes
+        # Puntos rojos si no se colorea por ángulo, sin radio (pixel)
+        scatter = ax.scatter(x, y, c='red', s=1, marker=",", linewidths=0, alpha=1.0, zorder=5)
 
     # iterador de frames
     def frame_iter():
@@ -145,6 +157,8 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
             Q.set_UVC(u, v)
         Q.set_offsets(np.column_stack((x, y)))
         scatter.set_offsets(np.column_stack((x, y)))  # Actualizar posiciones de los puntos
+        if color_by_angle:
+            scatter.set_array(c)  # Actualizar color por ángulo
         ax.set_title(f"Modelo Vicsek - t={t} (N={len(x)})", fontsize=14)
         return Q, scatter
 
