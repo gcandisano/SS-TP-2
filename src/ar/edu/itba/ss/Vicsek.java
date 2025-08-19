@@ -22,9 +22,9 @@ public class Vicsek {
 
     private void initializeParticles() {
         for (int i = 0; i < N; i++) {
-            long x = (long) (Math.random() * L);
-            long y = (long) (Math.random() * L);
-            long theta = (long) (Math.random() * 360);
+            double x = Math.random() * L;
+            double y = Math.random() * L;
+            double theta = (Math.random() * 2 * Math.PI) - Math.PI; // [-pi, pi]
             particles[i] = new Particle(x, y, theta, i + 1);
         }
     }
@@ -34,12 +34,16 @@ public class Vicsek {
             double avgTheta = calculateAverageTheta(i);
             double noise = (Math.random() - 0.5) * eta;
             double newTheta = avgTheta + noise;
-            particles[i].setTheta((long) (newTheta % 360));
+            double wrappedTheta = Math.atan2(Math.sin(newTheta), Math.cos(newTheta)); // [-pi, pi]
+            particles[i].setTheta(wrappedTheta);
 
-            long newX = (long) ((particles[i].x + v * Math.cos(Math.toRadians(newTheta)) * deltaT) % L);
-            long newY = (long) ((particles[i].y + v * Math.sin(Math.toRadians(newTheta)) * deltaT) % L);
-            particles[i].setX((newX + L) % L);
-            particles[i].setY((newY + L) % L);
+            double newX = particles[i].x + v * Math.cos(wrappedTheta) * deltaT;
+            double newY = particles[i].y + v * Math.sin(wrappedTheta) * deltaT;
+            // wrap-around periódico en [0, L)
+            newX = ((newX % L) + L) % L;
+            newY = ((newY % L) + L) % L;
+            particles[i].setX(newX);
+            particles[i].setY(newY);
         }
     }
 
@@ -49,11 +53,11 @@ public class Vicsek {
         double sumCos = 0;
         for (Particle other : particles) {
             if (distance(p, other) <= r) {
-                sumSin += Math.sin(Math.toRadians(other.theta));
-                sumCos += Math.cos(Math.toRadians(other.theta));
+                sumSin += Math.sin(other.theta);
+                sumCos += Math.cos(other.theta);
             }
         }
-        return Math.toDegrees(Math.atan2(sumSin, sumCos));
+        return Math.atan2(sumSin, sumCos); // [-pi, pi]
     }
 
     private double distance(Particle p1, Particle p2) {
