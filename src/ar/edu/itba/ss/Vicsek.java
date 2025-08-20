@@ -30,21 +30,24 @@ public class Vicsek {
     }
 
     public void updateParticles() {
+        Particle[] newParticles = new Particle[N];
+        for (int i = 0; i < N; i++) {
+            newParticles[i] = new Particle(particles[i].x, particles[i].y, particles[i].theta, particles[i].id);
+        }
+
         for (int i = 0; i < N; i++) {
             double avgTheta = calculateAverageTheta(i);
             double noise = (Math.random() - 0.5) * eta;
             double newTheta = avgTheta + noise;
-            double wrappedTheta = Math.atan2(Math.sin(newTheta), Math.cos(newTheta)); // [-pi, pi]
-            particles[i].setTheta(wrappedTheta);
+            newParticles[i].setTheta(newTheta);
 
-            double newX = particles[i].x + v * Math.cos(wrappedTheta) * deltaT;
-            double newY = particles[i].y + v * Math.sin(wrappedTheta) * deltaT;
-            // wrap-around periódico en [0, L)
-            newX = ((newX % L) + L) % L;
-            newY = ((newY % L) + L) % L;
-            particles[i].setX(newX);
-            particles[i].setY(newY);
+            newParticles[i].setX(particles[i].x + v * Math.cos(newTheta) * deltaT);
+            newParticles[i].setY(particles[i].y + v * Math.sin(newTheta) * deltaT);
+            
+            newParticles[i].setX(((newParticles[i].x % L) + L) % L);
+            newParticles[i].setY(((newParticles[i].y % L) + L) % L);
         }
+        particles = newParticles;
     }
 
     private double calculateAverageTheta(int index) {

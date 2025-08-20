@@ -13,6 +13,10 @@ public class Particle {
         this.theta = theta;
         this.id = id;
     }
+
+    public Particle() {
+        this(0, 0, 0, 0);
+    }
     public void setTheta(double theta) {
         this.theta = theta;
     }
@@ -24,4 +28,5 @@ public class Particle {
     public void setY(double y) {
         this.y = y;
     }
+
 }

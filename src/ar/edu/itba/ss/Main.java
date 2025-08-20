@@ -6,12 +6,12 @@ public class Main {
     public static final String txtFile = "output.txt";
 
     public static void main(String[] args) {
-        int L = 100; // Size of the square domain
-        int N = 50; // Number of particles
-        double v = 5; // Speed of particles
-        double r = 10.0; // Interaction radius
-        double eta = 1.5; // Noise factor
-        double deltaT = 0.1; // Time step
+        int L = 25; // Size of the square domain
+        int N = 300; // Number of particles
+        double v = 0.03; // Speed of particles
+        double r = 1.0; // Interaction radius
+        double eta = 0.1; // Noise factor
+        double deltaT = 1; // Time step
 
         Vicsek vicsekModel = new Vicsek(L, N, v, r, eta, deltaT);
         int totalSteps = 1000; // Total number of simulation steps
