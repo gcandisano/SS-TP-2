@@ -41,8 +41,8 @@ public class Vicsek {
             double newTheta = avgTheta + noise;
             newParticles[i].setTheta(newTheta);
 
-            newParticles[i].setX(particles[i].x + v * Math.cos(newTheta) * deltaT);
-            newParticles[i].setY(particles[i].y + v * Math.sin(newTheta) * deltaT);
+            newParticles[i].setX(particles[i].x + v * Math.cos(particles[i].theta) * deltaT);
+            newParticles[i].setY(particles[i].y + v * Math.sin(particles[i].theta) * deltaT);
             
             newParticles[i].setX(((newParticles[i].x % L) + L) % L);
             newParticles[i].setY(((newParticles[i].y % L) + L) % L);
@@ -54,13 +54,15 @@ public class Vicsek {
         Particle p = particles[index];
         double sumSin = 0;
         double sumCos = 0;
+        int n = 0;
         for (Particle other : particles) {
             if (distance(p, other) <= r) {
                 sumSin += Math.sin(other.theta);
                 sumCos += Math.cos(other.theta);
+                n++;
             }
         }
-        return Math.atan2(sumSin, sumCos); // [-pi, pi]
+        return Math.atan2(sumSin/n, sumCos/n); // [-pi, pi]
     }
 
     private double distance(Particle p1, Particle p2) {
