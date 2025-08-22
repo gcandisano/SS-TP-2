@@ -4,14 +4,9 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import math
 from pathlib import Path
+import argparse
 
-def read_frames_plain(path):
-    """
-    Lee un archivo con líneas: id x y theta
-    Sin header, sin 't,'. Agrupa frames cuando el id disminuye o vuelve a 1.
-    Devuelve: frames (lista de dicts) con keys: x, y, theta (np.ndarray)
-    También retorna L (lado) estimado a partir del máximo x/y observado.
-    """
+def read_frames_plain(path, L=None):
     path = Path(path)
     xs, ys, ths, ids = [], [], [], []
     frames = []
@@ -68,37 +63,30 @@ def read_frames_plain(path):
 
     flush_frame()
 
-    # ARREGLADO: Manejo correcto de ángulos
+   
     all_theta = np.concatenate([fr["theta"] for fr in frames]) if frames else np.array([])
     if all_theta.size > 0:
-        # Si hay valores fuera de [-pi, pi], asumimos que están en grados
         if np.nanmax(np.abs(all_theta)) > np.pi:
             print(f"Convirtiendo ángulos de grados a radianes (rango observado: {np.nanmin(all_theta):.1f} a {np.nanmax(all_theta):.1f})")
             for fr in frames:
                 fr["theta"] = np.deg2rad(fr["theta"])
 
-        # ARREGLADO: Wrapping correcto a [-pi, pi]
         for fr in frames:
             th = fr["theta"]
-            # Wrapping simple a [-pi, pi]
             th = np.arctan2(np.sin(th), np.cos(th))
             fr["theta"] = th
 
-    # si L no es conocido, usamos el máximo observado (con un margen)
-    L = float(math.ceil(L_guess + 1))
+    if L is None:
+        L = float(math.ceil(L_guess + 1))
+        print(f"L no especificado. Estimado automáticamente: L = {L}")
+    else:
+        print(f"Usando L especificado: L = {L}")
+    
     return frames, L
 
-def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_ms=40, sub=1, save_mp4=None):
-    """
-    frames: lista de dicts con x,y,theta
-    L: lado de la caja (para ejes 0..L)
-    color_by_angle: colorear por ángulo
-    skip: tomar 1 de cada 'skip' frames para la animación
-    sub: submuestreo de partículas (1 = todas, 2 = una de cada 2, etc.)
-    """
+def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_ms=40, sub=1, save_mp4=None, arrow_scale=None, arrow_width=0.004):
     assert frames, "No hay frames para animar"
 
-    # primer frame (submuestreado si hace falta)
     def take_sub(fr):
         if sub <= 1: 
             return fr
@@ -115,14 +103,12 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
     ax.set_xlabel("x", fontsize=12); ax.set_ylabel("y", fontsize=12)
     ax.grid(True, alpha=0.3)
 
-    # ARREGLADO: Escala más grande para vectores más visibles
-    vector_scale = min(L/15, 3.0)  # Escala más grande
+    vector_scale = arrow_scale if arrow_scale is not None else 8.0
     
     if color_by_angle:
-        # ARREGLADO: Coloreado más claro y vectores más grandes
         c = (th + np.pi) / (2*np.pi)  # Normalizar a [0,1]
         Q = ax.quiver(x, y, u, v, c, cmap="hsv", angles="xy", scale_units="xy", 
-                     scale=vector_scale, width=0.008, alpha=0.9)  # width aumentado
+                     scale=vector_scale, width=arrow_width, alpha=0.9)
         cb = fig.colorbar(Q, ax=ax, fraction=0.046, pad=0.04)
         cb.set_label("Ángulo (0=π, 0.5=0, 1=π)", fontsize=10)
         # Puntos coloreados por ángulo, sin radio (pixel)
@@ -130,7 +116,7 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
         scatter.set_clim(0.0, 1.0)
     else:
         Q = ax.quiver(x, y, u, v, angles="xy", scale_units="xy", 
-                     scale=vector_scale, width=0.008, color="blue", alpha=0.9)  # width aumentado
+                     scale=vector_scale, width=arrow_width, color="blue", alpha=0.9)
         # Puntos rojos si no se colorea por ángulo, sin radio (pixel)
         scatter = ax.scatter(x, y, c='red', s=1, marker=",", linewidths=0, alpha=1.0, zorder=5)
 
@@ -170,16 +156,13 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
         plt.show()
 
 def polarization_series(frames):
-    """
-    v_a(t) = |sum_i (cosθ_i, sinθ_i)| / N
-    Devuelve np.array de v_a por frame.
-    """
     va = []
     for fr in frames:
-        th = fr["theta"]
-        sx = np.sum(np.cos(th))
-        sy = np.sum(np.sin(th))
-        va.append(np.hypot(sx, sy) / len(th))
+        sum_cos = sum_sin = 0.0
+        for i in range(fr["theta"].size):
+            sum_cos += np.cos(fr["theta"][i])
+            sum_sin += np.sin(fr["theta"][i])
+        va.append(np.sqrt(sum_cos**2 + sum_sin**2) / fr["theta"].size)
     return np.array(va, dtype=float)
 
 def plot_va(va):
@@ -193,14 +176,33 @@ def plot_va(va):
     plt.show()
 
 if __name__ == "__main__":
-    # Cambiá esto por tu ruta real:
-    path = "output.txt"
+    # Configuración de argumentos de línea de comandos
+    parser = argparse.ArgumentParser(description="Animador del modelo Vicsek")
+    parser.add_argument("--path", "-p", default="output.txt", 
+                       help="Ruta al archivo de datos (default: output.txt)")
+    parser.add_argument("--L", "-l", type=float, default=None,
+                       help="Tamaño de la grilla L (si no se especifica, se estima automáticamente)")
 
-    frames, L = read_frames_plain(path)
-    print(f"Frames leídos: {len(frames)}; Partículas por frame: {frames[0]['x'].size if frames else 0}; L≈{L}")
 
-    # Animación: color por ángulo, saltando 1 de cada 1, submuestreo de partículas opcional
-    animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_ms=40, sub=1, save_mp4=None)
+    parser.add_argument("--save", type=str, default=None,
+                       help="Guardar animación como MP4 (ej: --save anim.mp4)")
+    parser.add_argument("--no-color", action="store_true",
+                       help="No colorear por ángulo (usar color azul uniforme)")
+    
+    args = parser.parse_args()
+
+    frames, L = read_frames_plain(args.path, args.L)
+    print(f"Frames leídos: {len(frames)}; Partículas por frame: {frames[0]['x'].size if frames else 0}; L={L}")
+
+    # Animación: color por ángulo
+    animate_quiver_from_frames(
+        frames, L, 
+        color_by_angle=not args.no_color, 
+        skip=1, 
+        interval_ms=40, 
+        sub=1, 
+        save_mp4=args.save,
+    )
 
     # Serie v_a(t)
     va = polarization_series(frames)
