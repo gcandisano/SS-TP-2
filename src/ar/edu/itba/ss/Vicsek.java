@@ -25,6 +25,9 @@ public class Vicsek {
             double x = Math.random() * L;
             double y = Math.random() * L;
             double theta = (Math.random() * 2 * Math.PI) - Math.PI; // [-pi, pi]
+            // Normalize to ensure it's in the correct range
+            while (theta < -Math.PI) theta += 2 * Math.PI;
+            while (theta >= Math.PI) theta -= 2 * Math.PI;
             particles[i] = new Particle(x, y, theta, i + 1);
         }
     }
@@ -39,6 +42,11 @@ public class Vicsek {
             double avgTheta = calculateAverageTheta(i);
             double noise = (Math.random() - 0.5) * eta;
             double newTheta = avgTheta + noise;
+            
+            // Normalize the new angle to ensure it's in the correct range
+            while (newTheta < -Math.PI) newTheta += 2 * Math.PI;
+            while (newTheta >= Math.PI) newTheta -= 2 * Math.PI;
+            
             newParticles[i].setTheta(newTheta);
 
             newParticles[i].setX(particles[i].x + v * Math.cos(particles[i].theta) * deltaT);
@@ -62,7 +70,14 @@ public class Vicsek {
                 n++;
             }
         }
-        return Math.atan2(sumSin/n, sumCos/n); // [-pi, pi]
+        if (n == 0) {
+            return particles[index].theta; // Keep current angle if no neighbors
+        }
+        double avgTheta = Math.atan2(sumSin/n, sumCos/n); // [-pi, pi]
+        // Normalize to ensure it's in the correct range
+        while (avgTheta < -Math.PI) avgTheta += 2 * Math.PI;
+        while (avgTheta >= Math.PI) avgTheta -= 2 * Math.PI;
+        return avgTheta;
     }
 
     private double distance(Particle p1, Particle p2) {

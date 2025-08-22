@@ -66,13 +66,16 @@ def read_frames_plain(path, L=None):
    
     all_theta = np.concatenate([fr["theta"] for fr in frames]) if frames else np.array([])
     if all_theta.size > 0:
+        # Check if angles are in degrees (if max > pi, they might be in degrees)
         if np.nanmax(np.abs(all_theta)) > np.pi:
             print(f"Convirtiendo ángulos de grados a radianes (rango observado: {np.nanmin(all_theta):.1f} a {np.nanmax(all_theta):.1f})")
             for fr in frames:
                 fr["theta"] = np.deg2rad(fr["theta"])
 
+        # Normalize all angles to [-pi, pi] range
         for fr in frames:
             th = fr["theta"]
+            # Normalize to [-pi, pi] range
             th = np.arctan2(np.sin(th), np.cos(th))
             fr["theta"] = th
 

@@ -6,9 +6,9 @@ public class Main {
     public static final String txtFile = "output.txt";
 
     public static void main(String[] args) {
-        int L = 25; // Size of the square domain
+        int L = 10; // Size of the square domain
         int N = 300; // Number of particles
-        double v = 0.03; // Speed of particles
+        double v = 0.3; // Speed of particles
         double r = 1.0; // Interaction radius
         double eta = 0.1; // Noise factor
         double deltaT = 1; // Time step
