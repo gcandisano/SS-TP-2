@@ -172,6 +172,7 @@ def plot_va(va):
     ax.set_xlabel("t (frames)")
     ax.set_ylabel("v_a")
     ax.set_title("Polarización v_a(t)")
+    ax.set_ylim(0, 1)  # Eje y siempre de 0 a 1
     ax.grid(True)
     plt.show()
 
