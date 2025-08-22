@@ -95,7 +95,7 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
 
     fr0 = take_sub(frames[0])
     x, y, th = fr0["x"], fr0["y"], fr0["theta"]
-    u, v = np.cos(th), np.sin(th)
+    u, v = np.cos(th), -np.sin(th)  # Flip y-component to match coordinate system
 
     fig, ax = plt.subplots(figsize=(10,10))
     ax.set_xlim(0, L); ax.set_ylim(0, L); ax.set_aspect("equal", adjustable="box")
@@ -103,7 +103,7 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
     ax.set_xlabel("x", fontsize=12); ax.set_ylabel("y", fontsize=12)
     ax.grid(True, alpha=0.3)
 
-    vector_scale = arrow_scale if arrow_scale is not None else 8.0
+    vector_scale = arrow_scale if arrow_scale is not None else 5.0
     
     if color_by_angle:
         c = (th + np.pi) / (2*np.pi)  # Normalizar a [0,1]
@@ -115,7 +115,7 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
         scatter = ax.scatter(x, y, c=c, cmap="hsv", s=1, marker=",", linewidths=0, alpha=1.0, zorder=5)
         scatter.set_clim(0.0, 1.0)
     else:
-        Q = ax.quiver(x, y, u, v, angles="xy", scale_units="xy", 
+        Q = ax.quiver(x, y, u, v, scale_units="xy", 
                      scale=vector_scale, width=arrow_width, color="blue", alpha=0.9)
         # Puntos rojos si no se colorea por ángulo, sin radio (pixel)
         scatter = ax.scatter(x, y, c='red', s=1, marker=",", linewidths=0, alpha=1.0, zorder=5)
