@@ -13,15 +13,15 @@ public class Main {
         double eta = 0.1; // Noise factor
         double deltaT = 1; // Time step
 
-        VoterInteraction voterInteractionModel = new VoterInteraction(L, N, v, r, eta, deltaT);
+        Vicsek vicsekModel = new Vicsek(L, N, v, r, eta, deltaT, true); // Use voterModel: true
         int totalSteps = 1000; // Total number of simulation steps
         File outputFile = new File(txtFile);
 
         try (java.io.PrintWriter writer = new java.io.PrintWriter(outputFile)) {
             writer.printf("id x y theta%n");
             for (int step = 0; step < totalSteps; step++) {
-                voterInteractionModel.updateParticles();
-                for (Particle p : voterInteractionModel.particles) {
+                vicsekModel.updateParticles();
+                for (Particle p : vicsekModel.particles) {
                     writer.printf("%d %.6f %.6f %.6f%n", p.id, p.x, p.y, p.theta);
                 }
                 writer.println();

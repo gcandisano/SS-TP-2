@@ -1,5 +1,8 @@
 package ar.edu.itba.ss;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Vicsek {
     private final int L;
     private final int N;
@@ -7,9 +10,10 @@ public class Vicsek {
     private final double r;
     private final double eta;
     private final double deltaT;
+    private final boolean useVoterModel;
     Particle[] particles;
 
-    public Vicsek(int L, int N, double v, double r, double eta, double deltaT) {
+    public Vicsek(int L, int N, double v, double r, double eta, double deltaT, boolean useVoterModel) {
         this.L = L;
         this.N = N;
         this.v = v;
@@ -17,6 +21,7 @@ public class Vicsek {
         this.eta = eta;
         this.deltaT = deltaT;
         this.particles = new Particle[N];
+        this.useVoterModel = useVoterModel;
         initializeParticles();
     }
 
@@ -39,7 +44,7 @@ public class Vicsek {
         }
 
         for (int i = 0; i < N; i++) {
-            double avgTheta = calculateAverageTheta(i);
+            double avgTheta = useVoterModel ? getRandomNeighborTheta(i) : calculateAverageTheta(i);
             double noise = (Math.random() - 0.5) * eta;
             double newTheta = avgTheta + noise;
             
@@ -78,6 +83,21 @@ public class Vicsek {
         while (avgTheta < -Math.PI) avgTheta += 2 * Math.PI;
         while (avgTheta >= Math.PI) avgTheta -= 2 * Math.PI;
         return avgTheta;
+    }
+
+    private double getRandomNeighborTheta(int index) {
+        List<Double> neighborThetas = new ArrayList<>();
+        Particle p = particles[index];
+        for (Particle other : particles) {
+            if (distance(p, other) <= r) {
+                neighborThetas.add(other.theta);
+            }
+        }
+        if (neighborThetas.isEmpty()) {
+            return p.theta;
+        }
+        int pick = (int) Math.floor(Math.random() * neighborThetas.size());
+        return neighborThetas.get(pick);
     }
 
     private double distance(Particle p1, Particle p2) {
