@@ -8,60 +8,71 @@ import argparse
 
 def read_frames_plain(path, L=None):
     path = Path(path)
-    xs, ys, ths, ids = [], [], [], []
     frames = []
     L_guess = 0.0
 
-    def flush_frame():
-        nonlocal xs, ys, ths, frames
-        if xs:
-            frames.append({
-                "x": np.array(xs, dtype=float),
-                "y": np.array(ys, dtype=float),
-                "theta": np.array(ths, dtype=float),
-            })
-            xs, ys, ths, = [], [], []
 
-    last_id = None
+
     with path.open("r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
+        lines = f.readlines()
 
-            # 1) Intento por whitespace
-            parts = line.split()
-            # 2) Si no son 4, intento CSV
-            if len(parts) != 4:
-                parts = [p.strip() for p in line.split(",")]
-            if len(parts) != 4:
-                continue  # línea no válida
-
-            i_str, x_str, y_str, th_str = parts
-
-            # Normalización decimal: coma -> punto
-            i_str  = i_str.replace(",", ".")
-            x_str  = x_str.replace(",", ".")
-            y_str  = y_str.replace(",", ".")
-            th_str = th_str.replace(",", ".")
-
-            try:
-                i  = int(float(i_str))  # por si viene "1.0"
-                x  = float(x_str)
-                y  = float(y_str)
-                th = float(th_str)
-            except ValueError:
-                continue
-
-            # nuevo frame si el id "resetea"
-            if last_id is not None and i <= last_id:
-                flush_frame()
-            last_id = i
-
-            xs.append(x); ys.append(y); ths.append(th)
+    data_lines = lines
+    
+    current_frame_xs, current_frame_ys, current_frame_ths = [], [], []
+    
+    for line in data_lines:
+        line = line.strip()
+        if not line:
+            continue
+            
+        # Si la línea empieza con 't', es un nuevo frame
+        if line.startswith('t') :
+            # Guardar el frame anterior si existe
+            if current_frame_xs:
+                frames.append({
+                    "x": np.array(current_frame_xs, dtype=float),
+                    "y": np.array(current_frame_ys, dtype=float),
+                    "theta": np.array(current_frame_ths, dtype=float),
+                })
+                current_frame_xs, current_frame_ys, current_frame_ths = [], [], []
+            continue
+            
+        # Procesar línea de partícula: x y vx vy (partícula id)
+        parts = line.split()
+        if len(parts) < 4:
+            continue
+            
+        try:
+            # Normalizar decimal: coma -> punto
+            x_str = parts[0].replace(",", ".")
+            y_str = parts[1].replace(",", ".")
+            vx_str = parts[2].replace(",", ".")
+            vy_str = parts[3].replace(",", ".")
+            
+            x = float(x_str)
+            y = float(y_str)
+            vx = float(vx_str)
+            vy = float(vy_str)
+            
+            # Calcular theta a partir de vx y vy
+            theta = np.arctan2(vy, vx)
+            
+            current_frame_xs.append(x)
+            current_frame_ys.append(y)
+            current_frame_ths.append(theta)
+            
             L_guess = max(L_guess, x, y)
-
-    flush_frame()
+            
+        except ValueError:
+            continue
+    
+    # Guardar el último frame
+    if current_frame_xs:
+        frames.append({
+            "x": np.array(current_frame_xs, dtype=float),
+            "y": np.array(current_frame_ys, dtype=float),
+            "theta": np.array(current_frame_ths, dtype=float),
+        })
 
    
     all_theta = np.concatenate([fr["theta"] for fr in frames]) if frames else np.array([])
@@ -151,7 +162,7 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
         ax.set_title(f"Modelo Vicsek - t={t} (N={len(x)})", fontsize=14)
         return Q, scatter
 
-    anim = FuncAnimation(fig, update, interval=interval_ms, blit=False)
+    anim = FuncAnimation(fig, update, interval=interval_ms, blit=False, cache_frame_data=False)
 
     if save_mp4:
         anim.save(save_mp4, writer="ffmpeg", dpi=150, fps=int(1000/max(1,interval_ms)))

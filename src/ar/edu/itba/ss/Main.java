@@ -9,17 +9,18 @@ public class Main {
         Config cfg = parseArgs(args);
 
         Vicsek vicsekModel = new Vicsek(cfg.L, cfg.N, cfg.v, cfg.r, cfg.eta, cfg.deltaT, cfg.useVoterModel);
-        int totalSteps = 1000; // Total number of simulation steps
+        int totalSteps = 2000; // Total number of simulation steps
         File outputFile = new File(cfg.outputName);
 
         try (java.io.PrintWriter writer = new java.io.PrintWriter(outputFile)) {
-            writer.printf("id x y theta%n");
             for (int step = 0; step < totalSteps; step++) {
                 vicsekModel.updateParticles();
+                writer.printf("t%d%n", step + 1);
                 for (Particle p : vicsekModel.particles) {
-                    writer.printf("%d %.6f %.6f %.6f%n", p.id, p.x, p.y, p.theta);
+                    double vx = cfg.v * Math.cos(p.theta);
+                    double vy = cfg.v * Math.sin(p.theta);
+                    writer.printf("%.6f %.6f %.6f %.6f %n", p.x, p.y, vx, vy);
                 }
-                writer.println();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -31,7 +32,7 @@ public class Main {
         int N = 300; // Number of particles (default)
         double v = 0.03; // Speed of particles (default)
         double r = 1.0; // Interaction radius (default)
-        double eta = 0.1; // Noise factor (default)
+        double eta = 3; // Noise factor (default)
         double deltaT = 1; // Time step (default)
         String outputName = txtFile; // Output file name (default)
         boolean useVoterModel = false; // Use voter model by default (can be enabled via -voter)
