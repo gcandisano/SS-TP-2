@@ -111,12 +111,12 @@ def main():
     parser = argparse.ArgumentParser(description="Graficar v_a(t) para 6 archivos output*.txt")
     parser.add_argument("--L", "-l", type=float, default=None, help="Tamaño de la grilla L. Si no se especifica se estima automáticamente")
     parser.add_argument("--files", nargs='*', default=[
-        "output.txt",
-        "output2.txt",
-        "output3.txt",
-        "output4.txt",
-        "output5.txt",
-        "output6.txt",
+        "Ruido0.txt",
+        "Ruido1.txt",
+        "Ruido2.txt",
+        "Ruido3.txt",
+        "Ruido4.txt",
+        "Ruido5.txt",
     ], help="Lista de archivos a graficar (por defecto los 6 output*.txt)")
     args = parser.parse_args()
 

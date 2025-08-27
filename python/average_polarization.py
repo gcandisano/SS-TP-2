@@ -137,12 +137,12 @@ def main():
 
     # Archivos a procesar y sus correspondientes ruidos
     files_and_noise = [
-        ("output.txt", 0),
-        ("output2.txt", 1),
-        ("output3.txt", 2),
-        ("output4.txt", 3),
-        ("output5.txt", 4),
-        ("output6.txt", 5)
+        ("Ruido0.txt", 0),
+        ("Ruido1.txt", 1),
+        ("Ruido2.txt", 2),
+        ("Ruido3.txt", 3),
+        ("Ruido4.txt", 4),
+        ("Ruido5.txt", 5)
     ]
     
     noise_values = []
