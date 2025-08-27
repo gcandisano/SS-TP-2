@@ -111,12 +111,10 @@ def main():
     parser = argparse.ArgumentParser(description="Graficar v_a(t) para 6 archivos output*.txt")
     parser.add_argument("--L", "-l", type=float, default=None, help="Tamaño de la grilla L. Si no se especifica se estima automáticamente")
     parser.add_argument("--files", nargs='*', default=[
-        "Ruido0.txt",
-        "Ruido1.txt",
-        "Ruido2.txt",
-        "Ruido3.txt",
-        "Ruido4.txt",
-        "Ruido5.txt",
+        "40Ruido1.txt",
+        "100Ruido1.txt",
+        "400Ruido1.txt",
+        "4000Ruido1.txt",
     ], help="Lista de archivos a graficar (por defecto los 6 output*.txt)")
     args = parser.parse_args()
 
@@ -131,7 +129,7 @@ def main():
                 continue
             va = polarization_series(frames)
             t = np.arange(va.size)
-            label = Path(file).name
+            label = Path(file).stem  # Remove .txt from label
             plt.plot(t, va, label=label, color=colors[i % len(colors)], linewidth=1.5)
         except Exception as e:
             print(f"Error procesando {file}: {e}")
