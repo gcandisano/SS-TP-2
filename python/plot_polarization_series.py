@@ -4,6 +4,7 @@ from pathlib import Path
 import math
 import argparse
 
+
 def read_frames_plain(path, L=None):
     path = Path(path)
     frames = []
@@ -94,6 +95,7 @@ def read_frames_plain(path, L=None):
     
     return frames, L
 
+
 def polarization_series(frames):
     va = []
     for fr in frames:
@@ -104,92 +106,47 @@ def polarization_series(frames):
         va.append(np.sqrt(sum_cos**2 + sum_sin**2) / fr["theta"].size)
     return np.array(va, dtype=float)
 
-def calculate_polarization_stats(filename, start_frame=250, L=None):
-    """Calcula la polarización promedio y desvío estándar desde t=start_frame"""
-    try:
-        frames, L = read_frames_plain(filename, L)
-        if len(frames) <= start_frame:
-            print(f"Advertencia: {filename} tiene solo {len(frames)} frames, pero se requiere desde t={start_frame}")
-            return None, None
-        
-        # Calcular polarización para todos los frames
-        va = polarization_series(frames)
-        
-        # Tomar solo desde t=start_frame
-        va_from_start = va[start_frame:]
-        
-        # Calcular promedio y desvío estándar
-        mean_polarization = np.mean(va_from_start)
-        std_polarization = np.std(va_from_start)
-        
-        print(f"{filename}: Polarización promedio = {mean_polarization:.4f}, Desvío = {std_polarization:.4f}")
-        
-        return mean_polarization, std_polarization
-        
-    except Exception as e:
-        print(f"Error procesando {filename}: {e}")
-        return None, None
 
 def main():
-    parser = argparse.ArgumentParser(description="Cálculo de polarización promedio vs ruido")
+    parser = argparse.ArgumentParser(description="Graficar v_a(t) para 6 archivos output*.txt")
     parser.add_argument("--L", "-l", type=float, default=None, help="Tamaño de la grilla L. Si no se especifica se estima automáticamente")
+    parser.add_argument("--files", nargs='*', default=[
+        "output.txt",
+        "output2.txt",
+        "output3.txt",
+        "output4.txt",
+        "output5.txt",
+        "output6.txt",
+    ], help="Lista de archivos a graficar (por defecto los 6 output*.txt)")
     args = parser.parse_args()
 
-    # Archivos a procesar y sus correspondientes ruidos
-    files_and_noise = [
-        ("output.txt", 0),
-        ("output2.txt", 1),
-        ("output3.txt", 2),
-        ("output4.txt", 3),
-        ("output5.txt", 4),
-        ("output6.txt", 5)
-    ]
-    
-    noise_values = []
-    mean_polarizations = []
-    std_polarizations = []
-    
-    # Procesar cada archivo
-    for filename, noise in files_and_noise:
-        mean_pol, std_pol = calculate_polarization_stats(filename, start_frame=250, L=args.L)
-        
-        if mean_pol is not None and std_pol is not None:
-            noise_values.append(noise)
-            mean_polarizations.append(mean_pol)
-            std_polarizations.append(std_pol)
-    
-    # Crear el gráfico
     plt.figure(figsize=(10, 6))
-    
-    # Graficar puntos con barras de error
-    plt.errorbar(noise_values, mean_polarizations, yerr=std_polarizations, 
-                fmt='o-', capsize=5, capthick=2, linewidth=2, markersize=8)
-    
-    # Configurar el gráfico
-    plt.xlabel('Ruido (rad)')
-    plt.ylabel('Polarización promedio')
+    colors = [f"C{i}" for i in range(10)]
+
+    for i, file in enumerate(args.files):
+        try:
+            frames, _ = read_frames_plain(file, args.L)
+            if not frames:
+                print(f"Advertencia: {file} no contiene frames válidos")
+                continue
+            va = polarization_series(frames)
+            t = np.arange(va.size)
+            label = Path(file).name
+            plt.plot(t, va, label=label, color=colors[i % len(colors)], linewidth=1.5)
+        except Exception as e:
+            print(f"Error procesando {file}: {e}")
+            continue
+
+    plt.xlabel('t (frames)')
+    plt.ylabel('v_a')
+    plt.ylim(0, 1)
     plt.grid(True, alpha=0.3)
-    plt.xlim(-0.2, 5.2)
-    plt.ylim(0, 1.1)
-    
-    # Añadir etiquetas de valores en los puntos
-    for i, (noise, mean_pol, std_pol) in enumerate(zip(noise_values, mean_polarizations, std_polarizations)):
-        plt.annotate(f'{mean_pol:.3f}', 
-                    xy=(noise, mean_pol), 
-                    xytext=(0, 10), 
-                    textcoords='offset points',
-                    ha='center', 
-                    fontsize=9)
-    
+    plt.legend()
     plt.tight_layout()
     plt.show()
-    
-    # Imprimir resumen
-    print("\nResumen de resultados:")
-    print("Ruido | Polarización promedio | Desvío estándar")
-    print("-" * 45)
-    for noise, mean_pol, std_pol in zip(noise_values, mean_polarizations, std_polarizations):
-        print(f"{noise:5.0f} | {mean_pol:19.4f} | {std_pol:16.4f}")
+
 
 if __name__ == "__main__":
     main()
+
+
