@@ -33,6 +33,7 @@ bin/
 
 ### png files ###
 *.png
+!informe/*.png
 
 ### mp4 files ###
 *.mp4
