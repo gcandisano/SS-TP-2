@@ -162,7 +162,17 @@ def animate_quiver_from_frames(frames, L, color_by_angle=True, skip=1, interval_
         ax.set_title(f"Modelo Vicsek - t={t} (N={len(x)})", fontsize=14)
         return Q, scatter
 
-    anim = FuncAnimation(fig, update, interval=interval_ms, blit=False, cache_frame_data=False)
+    frame_list = list(frame_iter())  # Convert generator to list to count frames
+    it = iter(frame_list)            # Reset iterator
+
+    anim = FuncAnimation(
+        fig,
+        update,
+        frames=len(frame_list),      # Explicitly set number of frames
+        interval=interval_ms,
+        blit=False,
+        cache_frame_data=False
+    )
 
     if save_mp4:
         anim.save(save_mp4, writer="ffmpeg", dpi=150, fps=int(1000/max(1,interval_ms)))
