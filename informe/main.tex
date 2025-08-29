@@ -159,124 +159,95 @@ El diagrama de clases UML (Figura 1) ilustra la estructura orientada a objetos d
 \end{figure}
 
 \section{Resultados}
-
-\subsection{Evolución Temporal de la Polarización}
-Para caracterizar la dinámica del sistema, se analizó primero la evolución temporal del parámetro de orden $v_a$ en diferentes regímenes de ruido.
-
+\subsection{Evolución Temporal y Determinación del Estado Estacionario}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{polarizacion_tiempo_sin_ruido.png}
-\caption{Evolución temporal de la polarización $v_a(t)$ para $\eta = 0$. Se observa cómo el sistema alcanza rápidamente un estado de orden completo ($v_a \approx 1$) característico del movimiento colectivo coordinado.}
-\label{fig:tiempo_sin_ruido}
+\includegraphics[width=0.8\textwidth]{polarizacion_tiempo_variando_ruido.png}
+\caption{Evolución temporal de $v_a(t)$ para diferentes valores de $\eta$ ($\rho = 0.5$, $N = 50$). La línea vertical punteada indica el inicio del estado estacionario usado para promediar.}
+\label{fig:tiempo_variando_ruido}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{polarizacion_tiempo_con_ruido.png}
-\caption{Evolución temporal de la polarización $v_a(t)$ para $\eta = 2.0$. El ruido elevado impide la formación de un estado ordenado, manteniendo el sistema en un régimen desordenado ($v_a \approx 0$) con fluctuaciones características.}
-\label{fig:tiempo_con_ruido}
-\end{figure}
+El análisis de la evolución temporal nos permitió identificar el estado estacionario del sistema para cada conjunto de parámetros. Como se observa en la Figura \ref{fig:tiempo_variando_ruido}, tras un régimen transitorio inicial, la polarización $v_a(t)$ fluctúa alrededor de un valor característico para cada nivel de ruido $\eta$. Descartamos los primeros 200 pasos de simulación y promediamos sobre 800 pasos adicionales para obtener el valor de $v_a$ en estado estacionario.
 
-Las Figuras \ref{fig:tiempo_sin_ruido} y \ref{fig:tiempo_con_ruido} muestran el comportamiento transitorio y estacionario del sistema. Para el análisis cuantitativo, se descartaron los primeros 200 pasos de simulación (régimen transitorio) y se promediaron los valores de $v_a$ sobre 800 pasos adicionales para obtener el valor en estado estacionario.
-
-\subsection{Modelo Clásico (Promedio)}
-
-\subsubsection{Dependencia con el Ruido $\eta$}
+\subsection{Modelo Clásico de Vicsek}
+Dependencia con el Ruido $\eta$
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{polarizacion_vs_ruido_promedio.png}
-\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo clásico con $\rho = 3.0$ y $r = 1.0$. Cada punto representa el promedio temporal en estado estacionario, mostrando la transición de fase entre los estados ordenado y desordenado.}
+\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo clásico con $\rho = 0.5$ y $\rho = 10$. Cada punto representa el promedio temporal en estado estacionario.}
 \label{fig:va_vs_eta_promedio}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{promedio_polarizacion_ruido_promedio.png}
-\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$. Las barras de error representan la desviación estándar temporal. Se observa la criticalidad alrededor de $\eta_c \approx 0.3-0.4$, consistente con los resultados reportados en la literatura [1].}
+\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($N = 1000$, $\rho = 10$).}
 \label{fig:promedio_va_eta_promedio}
 \end{figure}
 
-\subsubsection{Dependencia con la Densidad $\rho$}
+Dependencia con la Densidad $\rho$
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{polarizacion_vs_densidad_promedio.png}
-\caption{Polarización $v_a$ en función de la densidad $\rho$ para el modelo clásico con $\eta = 0.1$ y $r = 1.0$. La transición a un estado ordenado ocurre a densidades críticas bajas, evidenciando la robustez del fenómeno de flocking.}
+\caption{Polarización $v_a$ en función de la densidad $\rho$ para $\eta = 0$ y $\eta = 3$.}
 \label{fig:va_vs_rho_promedio}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{promedio_polarizacion_densidad_promedio.png}
-\caption{Valor promedio de la polarización en estado estacionario en función de la densidad $\rho$. El sistema muestra una transición suave hacia el estado ordenado a medida que aumenta la densidad de partículas.}
-\label{fig:promedio_va_rho_promedio}
-\end{figure}
-
-Para el modelo clásico, los resultados muestran una transición de fase bien definida en función del ruido $\eta$ (Figuras \ref{fig:va_vs_eta_promedio} y \ref{fig:promedio_va_eta_promedio}). El valor crítico de ruido $\eta_c \approx 0.3-0.4$ coincide con lo reportado por Vicsek (y otros). [1]. Respecto a la densidad $\rho$, se observa que el sistema alcanza el estado ordenado incluso a densidades relativamente bajas ($\rho > 1.0$), demostrando la eficacia del mecanismo de promediado para establecer orden colectivo.
+Para el modelo clásico, los resultados muestran una transición de fase suave y continua en función del ruido $\eta$, consistente con lo reportado por Vicsek et al. [1]. A mayor densidad $\rho$, el sistema mantiene un orden notable incluso para valores de ruido más grandes, evidenciando el papel crucial de la densidad en la facilitación de interacciones.
 
 \subsection{Modelo de Votante}
-
-\subsubsection{Dependencia con el Ruido $\eta$}
+Dependencia con el Ruido $\eta$
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{polarizacion_vs_ruido_voter.png}
-\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo de votante con $\rho = 3.0$ y $r = 1.0$. La transición es más abrupta comparada con el modelo clásico.}
+\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo de votante con $\rho = 0.5$ y $\rho = 10$.}
 \label{fig:va_vs_eta_voter}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{promedio_polarizacion_ruido_voter.png}
-\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ para el modelo de votante. El sistema muestra una mayor sensibilidad al ruido, con una transición más marcada alrededor de $\eta_c \approx 0.2$.}
+\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($N = 1000$, $\rho = 10$).}
 \label{fig:promedio_va_eta_voter}
 \end{figure}
 
-\subsubsection{Dependencia con la Densidad $\rho$}
+Dependencia con la Densidad $\rho$
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{polarizacion_vs_densidad_voter.png}
-\caption{Polarización $v_a$ en función de la densidad $\rho$ para el modelo de votante con $\eta = 0.1$ y $r = 1.0$. Se requiere mayor densidad para alcanzar el estado ordenado comparado con el modelo clásico.}
+\caption{Polarización $v_a$ en función de la densidad $\rho$ para $\eta = 0$ y $\eta = 1$.}
 \label{fig:va_vs_rho_voter}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{promedio_polarizacion_densidad_voter.png}
-\caption{Valor promedio de la polarización en estado estacionario en función de la densidad $\rho$ para el modelo de votante. La transición es menos suave y requiere densidades más altas para alcanzar valores elevados de $v_a$.}
-\label{fig:promedio_va_rho_voter}
-\end{figure}
-
-El modelo de votante (Figuras \ref{fig:va_vs_eta_voter} - \ref{fig:promedio_va_rho_voter}) presenta un comportamiento cualitativamente diferente al modelo clásico. La transición en función del ruido es más abrupta y ocurre a valores críticos más bajos ($\eta_c \approx 0.2$), indicando una mayor fragilidad del estado ordenado frente a perturbaciones. Respecto a la densidad, el modelo de votante requiere valores más altos de $\rho$ para alcanzar el estado ordenado, reflejando la menor eficiencia del mecanismo de copia aleatoria comparado con el promediado colectivo.
+El modelo de votante presenta un comportamiento cualitativamente diferente, con una transición más abrupta que ocurre a valores críticos de ruido más bajos ($\eta_c \approx 0.2$). Además, requiere densidades significativamente más altas para alcanzar el estado ordenado, reflejando la menor eficiencia del mecanismo de copia aleatoria individual.
 
 \subsection{Análisis Comparativo}
-La comparación entre ambos modelos revela diferencias en sus dinámicas colectivas. El modelo clásico, basado en el promedio de sus vecinos, muestra una transición más suave y robusta. Por el contrario, el modelo de votante, al depender de interacciones binarias aleatorias, presenta una transición más abrupta y requiere condiciones más estrictas (menor ruido y mayor densidad) para sostener el estado ordenado.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{comparacion_modelos.png}
+\caption{Comparación directa de $v_a$ vs $\eta$ para ambos modelos ($\rho = 3.0$).}
+\label{fig:comparacion_modelos}
+\end{figure}
 
-Estos resultados son consistentes con los reportados por Baglietto \& Vazquez [2], donde se demuestra que las interacciones tipo votante alteran significativamente las propiedades críticas del sistema y la naturaleza de la transición de fase.
+La comparación entre ambos modelos revela que la naturaleza de las interacciones locales afecta profundamente las propiedades emergentes del sistema. Mientras el modelo clásico muestra una transición suave característica de sistemas con interacciones cooperativas extendidas, el modelo de votante exhibe una transición más abrupta típica de sistemas con dinámicas de consenso binario, consistente con lo reportado por Baglietto & Vazquez [2].
 
 \section{Conclusión}
+A través de la implementación y análisis computacional de los modelos de Vicsek clásico y de votante, se logró caracterizar y comparar los fenómenos de ordenamiento colectivo en sistemas de partículas autopropulsadas. Los principales hallazgos de este trabajo son:
 
-A través de la implementación y análisis computacional de los modelos de Vicsek clásico y de votante, se logró caracterizar y comparar los fenómenos de ordenamiento colectivo en sistemas de partículas autopropulsadas. Los principales hallazgos de este trabajo pueden resumirse en:
+\begin{itemize}
+    \item  Validación del modelo clásico: Reprodujimos exitosamente la transición de fase reportada por Vicsek (y otros), observando el paso de un estado desordenado ($v_a \approx 0$) a uno ordenado ($v_a \approx 1$) al disminuir el ruido $\eta$.
 
-\medskip
+    \item Caracterización del modelo de votante: Implementamos y analizamos la variante propuesta por Baglietto & Vazquez, encontrando una transición más abrupta que ocurre a valores críticos de ruido más bajos ($\eta_c \approx 0.2$).
 
-\textbf{1. Validación del modelo clásico:} Los resultados obtenidos para el modelo de Vicsek clásico reproducen consistentemente los comportamientos reportados en la referencia [1]. Se observó una transición de fase bien definida desde un estado desordenado ($v_a \approx 0$) a un estado ordenado ($v_a \approx 1$) cuando no hay ruido. La dependencia con la densidad mostró que el sistema puede alcanzar el estado ordenado incluso a densidades relativamente bajas ($\rho > 1.0$), demostrando la robustez del mecanismo de promediado colectivo. El ruido claramente afecta a la polarizacion del sistema, haciendo que, con un ruido > 0 la polarización nunca queda estable en 1.
+    \item  Análisis comparativo: Demostramos que el mecanismo de interacción (promediado vs. copia aleatoria) altera cualitativamente la naturaleza de la transición de fase, siendo más suave en el modelo clásico y más abrupta en el modelo de votante.
 
-\medskip
+    \item  Efecto de la densidad: Validamos que la densidad $\rho$ es un parámetro crucial que afecta la formación de la bandada, con mayores densidades favoreciendo el orden al facilitar las interacciones entre partículas.
 
-\textbf{2. Caracterización del modelo de votante:} El modelo con interacciones tipo votante exhibió un comportamiento cualitativamente diferente. La transición fue más abrupta y ocurrió a valores críticos de ruido más bajos ($\eta_c \approx 0.2$), indicando una mayor sensibilidad a las perturbaciones. Además, requirió densidades significativamente más altas para alcanzar el estado ordenado, reflejando la menor eficiencia del mecanismo de copia aleatoria individual comparado con el promediado colectivo.
+    \item  Comportamiento emergente: Confirmamos que el orden global ($v_a$ alto) es una propiedad emergente que surge de interacciones locales simples entre partículas, sin un líder central.
+\end{itemize}
 
-\medskip
+En síntesis, este trabajo demostró exitosamente cómo reglas simples a nivel individual pueden generar comportamientos complejos y diversos a nivel macroscópico, y cómo la modificación de estos mecanismos de interacción altera fundamentalmente las propiedades colectivas del sistema.
 
-\textbf{3. Análisis comparativo:} La comparación entre ambos modelos reveló que la naturaleza de las interacciones locales afecta profundamente las propiedades emergentes del sistema. Mientras el modelo clásico muestra una transición suave y robusta característica de sistemas con interacciones cooperativas extendidas, el modelo de votante exhibe una transición más abrupta típica de sistemas con dinámicas de consenso binario.
-
-\medskip
-
-\textbf{4. Implicaciones en modelado de sistemas complejos:} Estos resultados destacan la importancia de la estructura de interacciones en la formación de patrones colectivos en sistemas biológicos y sociales. El hecho de que cambios aparentemente menores en las reglas de interacción (promediado vs. copia aleatoria) produzcan diferencias significativas en el comportamiento macroscópico subraya la necesidad de carefully modelar los mecanismos microscópicos al estudiar fenómenos de emergencia.
-
-\medskip
-
-
-
-En síntesis, se demostró exitosamente la implementación computacional de ambos modelos, se caracterizaron sus propiedades críticas y se revelaron las diferencias fundamentales en su comportamiento colectivo, contribuyendo a la comprensión de cómo reglas simples a nivel individual pueden generar comportamientos complejos y diversos a nivel macroscópico.
 
 \begin{thebibliography}{9}
 \bibitem{vicsek} 
