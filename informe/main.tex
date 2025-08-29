@@ -159,62 +159,106 @@ El diagrama de clases UML (Figura 1) ilustra la estructura orientada a objetos d
 \end{figure}
 
 \section{Resultados}
-\subsection{Evolución Temporal y Determinación del Estado Estacionario}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{polarizacion_tiempo_variando_ruido.png}
-\caption{Evolución temporal de $v_a(t)$ para diferentes valores de $\eta$ ($\rho = 0.5$, $N = 50$). La línea vertical punteada indica el inicio del estado estacionario usado para promediar.}
-\label{fig:tiempo_variando_ruido}
-\end{figure}
 
-El análisis de la evolución temporal nos permitió identificar el estado estacionario del sistema para cada conjunto de parámetros. Como se observa en la Figura \ref{fig:tiempo_variando_ruido}, tras un régimen transitorio inicial, la polarización $v_a(t)$ fluctúa alrededor de un valor característico para cada nivel de ruido $\eta$. Descartamos los primeros 200 pasos de simulación y promediamos sobre 800 pasos adicionales para obtener el valor de $v_a$ en estado estacionario.
+Al analizar la evolución temporal de la polarización $v_a(t)$ observamos que, luego de un régimen transitorio inicial, el sistema alcanza un comportamiento estacionario. Este estado no implica necesariamente que $v_a(t)$ sea constante, sino que las fluctuaciones se estabilizan alrededor de un patrón característico para cada nivel de ruido $\eta$.  
+A partir de la inspección de las curvas podemos identificar aproximadamente el momento en que se alcanza este régimen, y para el análisis descartamos los primeros pasos de simulación, promediando luego a partir del período estacionario para estimar el valor estacionario de $v_a$.
 
 \subsection{Modelo Clásico de Vicsek}
-Dependencia con el Ruido $\eta$
+
+\subsubsection{Dependencia con el Ruido $\eta$}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{polarizacion_vs_ruido_promedio.png}
-\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo clásico con $\rho = 0.5$ y $\rho = 10$. Cada punto representa el promedio temporal en estado estacionario.}
+\includegraphics[width=0.9\textwidth]{polarizacion_vs_ruido_promedio.png}
+\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo clásico con $\rho = 0.5$ y $N = 50$. Cada punto representa el promedio temporal en estado estacionario.}
 \label{fig:va_vs_eta_promedio}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{promedio_polarizacion_ruido_promedio.png}
-\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($N = 1000$, $\rho = 10$).}
+\includegraphics[width=0.9\textwidth]{polarizacion_vs_ruido_promedio2.png}
+\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($N = 50$, $\rho = 10$).}
 \label{fig:promedio_va_eta_promedio}
 \end{figure}
 
-Dependencia con la Densidad $\rho$
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{polarizacion_vs_densidad_promedio.png}
-\caption{Polarización $v_a$ en función de la densidad $\rho$ para $\eta = 0$ y $\eta = 3$.}
-\label{fig:va_vs_rho_promedio}
+\includegraphics[width=0.9\textwidth]{promedio_polarizacion_ruido_promedio.png}
+\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo clásico con $\rho = 10$ y $N = 1000$. Cada punto representa el promedio temporal en estado estacionario.}
+\label{fig:va_vs_eta_promedio2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{promedio_polarizacion_ruido_promedio2.png}
+\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($N = 1000$, $\rho = 10$).}
+\label{fig:promedio_va_eta_promedio2}
+\end{figure}
+
+\subsubsection{Dependencia con la Densidad $\rho$}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{17.png}
+\caption{Polarización $v_a$ en función del tiempo $\rho$ para $\eta = 0$ variando densidad.}
+\label{fig:17}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{18.png}
+\caption{Polarización $v_a$ en función de la densidad $\rho$ para $\eta = 0$.}
+\label{fig:18}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{19.png}
+\caption{Polarización $v_a$ en función del tiempo $\rho$ para $\eta = 3$ variando densidad.}
+\label{fig:19}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{20.png}
+\caption{Polarización $v_a$ en función de la densidad $\rho$ para $\eta = 3$.}
+\label{fig:20}
 \end{figure}
 
 Para el modelo clásico, los resultados muestran una transición de fase suave y continua en función del ruido $\eta$, consistente con lo reportado por Vicsek et al. [1]. A mayor densidad $\rho$, el sistema mantiene un orden notable incluso para valores de ruido más grandes, evidenciando el papel crucial de la densidad en la facilitación de interacciones.
 
 \subsection{Modelo de Votante}
-Dependencia con el Ruido $\eta$
+\subsubsection{Dependencia con el Ruido $\eta$}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{polarizacion_vs_ruido_voter.png}
-\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo de votante con $\rho = 0.5$ y $\rho = 10$.}
+\includegraphics[width=0.9\textwidth]{Voter Densidad 0.5 Variando ruido.png}
+\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo de votante con $\rho = 0.5$ y $N = 50$.}
 \label{fig:va_vs_eta_voter}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{promedio_polarizacion_ruido_voter.png}
-\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($N = 1000$, $\rho = 10$).}
+\includegraphics[width=0.9\textwidth]{Average voter dens 05 variando ruido.png}
+\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($\rho = 0.5$, $N = 50$).}
 \label{fig:promedio_va_eta_voter}
 \end{figure}
 
-Dependencia con la Densidad $\rho$
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{polarizacion_vs_densidad_voter.png}
+\includegraphics[width=0.9\textwidth]{Voter Densidad 10 Variando ruido.png}
+\caption{Polarización $v_a$ en función del ruido $\eta$ para el modelo de votante con $\rho = 10$ y $N = 1000$.}
+\label{fig:va_vs_eta_voter2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{Average voter dens 10 variando ruido.png}
+\caption{Valor promedio de la polarización en estado estacionario en función del ruido $\eta$ ($\rho = 10$, $N = 1000$).}
+\label{fig:promedio_va_eta_voter2}
+\end{figure}
+
+\subsubsection{Dependencia con la Densidad $\rho$}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{TP2_UML.png}
 \caption{Polarización $v_a$ en función de la densidad $\rho$ para $\eta = 0$ y $\eta = 1$.}
 \label{fig:va_vs_rho_voter}
 \end{figure}
@@ -224,12 +268,12 @@ El modelo de votante presenta un comportamiento cualitativamente diferente, con 
 \subsection{Análisis Comparativo}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{comparacion_modelos.png}
+\includegraphics[width=0.8\textwidth]{TP2_UML.png}
 \caption{Comparación directa de $v_a$ vs $\eta$ para ambos modelos ($\rho = 3.0$).}
 \label{fig:comparacion_modelos}
 \end{figure}
 
-La comparación entre ambos modelos revela que la naturaleza de las interacciones locales afecta profundamente las propiedades emergentes del sistema. Mientras el modelo clásico muestra una transición suave característica de sistemas con interacciones cooperativas extendidas, el modelo de votante exhibe una transición más abrupta típica de sistemas con dinámicas de consenso binario, consistente con lo reportado por Baglietto & Vazquez [2].
+La comparación entre ambos modelos revela que la naturaleza de las interacciones locales afecta profundamente las propiedades emergentes del sistema. Mientras el modelo clásico muestra una transición suave característica de sistemas con interacciones cooperativas extendidas, el modelo de votante exhibe una transición más abrupta típica de sistemas con dinámicas de consenso binario, consistente con lo reportado por Baglietto \& Vazquez [2].
 
 \section{Conclusión}
 A través de la implementación y análisis computacional de los modelos de Vicsek clásico y de votante, se logró caracterizar y comparar los fenómenos de ordenamiento colectivo en sistemas de partículas autopropulsadas. Los principales hallazgos de este trabajo son:
@@ -237,7 +281,7 @@ A través de la implementación y análisis computacional de los modelos de Vics
 \begin{itemize}
     \item  Validación del modelo clásico: Reprodujimos exitosamente la transición de fase reportada por Vicsek (y otros), observando el paso de un estado desordenado ($v_a \approx 0$) a uno ordenado ($v_a \approx 1$) al disminuir el ruido $\eta$.
 
-    \item Caracterización del modelo de votante: Implementamos y analizamos la variante propuesta por Baglietto & Vazquez, encontrando una transición más abrupta que ocurre a valores críticos de ruido más bajos ($\eta_c \approx 0.2$).
+    \item Caracterización del modelo de votante: Implementamos y analizamos la variante propuesta por Baglietto \& Vazquez, encontrando una transición más abrupta que ocurre a valores críticos de ruido más bajos ($\eta_c \approx 0.2$).
 
     \item  Análisis comparativo: Demostramos que el mecanismo de interacción (promediado vs. copia aleatoria) altera cualitativamente la naturaleza de la transición de fase, siendo más suave en el modelo clásico y más abrupta en el modelo de votante.
 
