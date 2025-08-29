@@ -138,7 +138,7 @@ El algoritmo avanza sincrónicamente en pasos de tiempo discretos. En cada itera
 \item Para cada partícula, se determina su nuevo ángulo $\theta_i(t + \Delta t)$ según la regla de alineamiento seleccionada (promedio o votante) y el ruido aplicado.
 \item Se actualiza la posición de cada partícula utilizando su nueva dirección.
 \item Se aplican las condiciones de contorno periódicas a las nuevas posiciones.
-\item El estado completo del sistema (ID, x, y, theta de cada partícula) se escribe en un archivo de texto para su posterior análisis y visualización. Esta separación entre simulación y animación garantiza que la velocidad de visualización no dependa de la velocidad de cálculo del modelo.
+\item El estado completo del sistema (x, y, $v_x$, $v_y$ de cada partcula) se escribe en un archivo de texto para su posterior análisis y visualización. Esta separación entre simulación y animación garantiza que la velocidad de visualización no dependa de la velocidad de cálculo del modelo.
 \end{enumerate}
 
 \section{Modelo}
@@ -158,7 +158,7 @@ El diagrama de clases UML (Figura 1) ilustra la estructura orientada a objetos d
 \label{fig:uml}
 \end{figure}
 
-\section{Resultados y Discusión}
+\section{Resultados}
 
 \subsection{Evolución Temporal de la Polarización}
 Para caracterizar la dinámica del sistema, se analizó primero la evolución temporal del parámetro de orden $v_a$ en diferentes regímenes de ruido.
