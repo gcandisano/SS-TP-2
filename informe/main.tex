@@ -138,7 +138,7 @@ El algoritmo avanza sincrónicamente en pasos de tiempo discretos. En cada itera
 \item Para cada partícula, se determina su nuevo ángulo $\theta_i(t + \Delta t)$ según la regla de alineamiento seleccionada (promedio o votante) y el ruido aplicado.
 \item Se actualiza la posición de cada partícula utilizando su nueva dirección.
 \item Se aplican las condiciones de contorno periódicas a las nuevas posiciones.
-\item El estado completo del sistema (ID, x, y, theta de cada partícula) se escribe en un archivo de texto para su posterior análisis y visualización. Esta separación entre simulación y animación garantiza que la velocidad de visualización no dependa de la velocidad de cálculo del modelo.
+\item El estado completo del sistema (x, y, $v_x$, $v_y$ de cada partcula) se escribe en un archivo de texto para su posterior análisis y visualización. Esta separación entre simulación y animación garantiza que la velocidad de visualización no dependa de la velocidad de cálculo del modelo.
 \end{enumerate}
 
 \section{Modelo}
@@ -158,7 +158,7 @@ El diagrama de clases UML (Figura 1) ilustra la estructura orientada a objetos d
 \label{fig:uml}
 \end{figure}
 
-\section{Resultados y Discusión}
+\section{Resultados}
 
 \subsection{Evolución Temporal de la Polarización}
 Para caracterizar la dinámica del sistema, se analizó primero la evolución temporal del parámetro de orden $v_a$ en diferentes regímenes de ruido.
@@ -248,7 +248,7 @@ Para el modelo clásico, los resultados muestran una transición de fase bien de
 El modelo de votante (Figuras \ref{fig:va_vs_eta_voter} - \ref{fig:promedio_va_rho_voter}) presenta un comportamiento cualitativamente diferente al modelo clásico. La transición en función del ruido es más abrupta y ocurre a valores críticos más bajos ($\eta_c \approx 0.2$), indicando una mayor fragilidad del estado ordenado frente a perturbaciones. Respecto a la densidad, el modelo de votante requiere valores más altos de $\rho$ para alcanzar el estado ordenado, reflejando la menor eficiencia del mecanismo de copia aleatoria comparado con el promediado colectivo.
 
 \subsection{Análisis Comparativo}
-La comparación entre ambos modelos revela diferencias fundamentales en sus dinámicas colectivas. El modelo clásico, basado en promediado, muestra una transición más suave y robusta, capaz de mantener orden colectivo incluso con ruido moderado y a bajas densidades. Por el contrario, el modelo de votante, al depender de interacciones binarias aleatorias, exhibe una transición más abrupta y requiere condiciones más estrictas (menor ruido y mayor densidad) para sostener el estado ordenado.
+La comparación entre ambos modelos revela diferencias en sus dinámicas colectivas. El modelo clásico, basado en el promedio de sus vecinos, muestra una transición más suave y robusta. Por el contrario, el modelo de votante, al depender de interacciones binarias aleatorias, presenta una transición más abrupta y requiere condiciones más estrictas (menor ruido y mayor densidad) para sostener el estado ordenado.
 
 Estos resultados son consistentes con los reportados por Baglietto \& Vazquez [2], donde se demuestra que las interacciones tipo votante alteran significativamente las propiedades críticas del sistema y la naturaleza de la transición de fase.
 
@@ -258,7 +258,7 @@ A través de la implementación y análisis computacional de los modelos de Vics
 
 \medskip
 
-\textbf{1. Validación del modelo clásico:} Los resultados obtenidos para el modelo de Vicsek clásico reproducen consistentemente los comportamientos reportados en la literatura [1]. Se observó una transición de fase bien definida desde un estado desordenado ($v_a \approx 0$) a un estado ordenado ($v_a \approx 1$) en función del ruido $\eta$, con un valor crítico $\eta_c \approx 0.3-0.4$. La dependencia con la densidad mostró que el sistema puede alcanzar el estado ordenado incluso a densidades relativamente bajas ($\rho > 1.0$), demostrando la robustez del mecanismo de promediado colectivo.
+\textbf{1. Validación del modelo clásico:} Los resultados obtenidos para el modelo de Vicsek clásico reproducen consistentemente los comportamientos reportados en la referencia [1]. Se observó una transición de fase bien definida desde un estado desordenado ($v_a \approx 0$) a un estado ordenado ($v_a \approx 1$) cuando no hay ruido. La dependencia con la densidad mostró que el sistema puede alcanzar el estado ordenado incluso a densidades relativamente bajas ($\rho > 1.0$), demostrando la robustez del mecanismo de promediado colectivo. El ruido claramente afecta a la polarizacion del sistema, haciendo que, con un ruido > 0 la polarización nunca queda estable en 1.
 
 \medskip
 
@@ -274,9 +274,7 @@ A través de la implementación y análisis computacional de los modelos de Vics
 
 \medskip
 
-\textbf{5. Perspectivas futuras:} Este trabajo abre la puerta a investigaciones adicionales sobre la universalidad de clases de estos modelos, el estudio de correlaciones espaciales y temporales, y la exploración de otras variantes de interacción que puedan capturar aspectos específicos de sistemas naturales como bandadas de aves, cardúmenes de peces o dinámicas de opinión en redes sociales.
 
-\medskip
 
 En síntesis, se demostró exitosamente la implementación computacional de ambos modelos, se caracterizaron sus propiedades críticas y se revelaron las diferencias fundamentales en su comportamiento colectivo, contribuyendo a la comprensión de cómo reglas simples a nivel individual pueden generar comportamientos complejos y diversos a nivel macroscópico.
 
